@@ -17,7 +17,7 @@ const MobileNav = () => {
   const pathname = usePathname()
 
   return (
-    <section className='w-full max-w-[264px] flex justify-end items-center'>
+    <section className='w-full max-w-[264px]'>
       <Sheet>
         <SheetTrigger asChild>
           <Image
