@@ -1,15 +1,30 @@
-import MettingTypeList from '@/components/MettingTypeList'
-import React from 'react'
+'use client'
+
+import MettingTypeList from '@/components/MeetingTypeList'
+import React, { useEffect, useState } from 'react'
 
 const Home = () => {
-  const now = new Date()
-  const time = now.toLocaleTimeString('ru-RU', {
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 60000) // Обновление каждую минуту (60000 миллисекунд)
+
+    return () => {
+      clearInterval(timer) // Очистка интервала при размонтировании компонента
+    }
+  }, [currentTime])
+
+  const time = currentTime.toLocaleTimeString('ru-RU', {
     hour: '2-digit',
     minute: '2-digit'
   })
+
   const date = new Intl.DateTimeFormat('ru-RU', {
     dateStyle: 'full'
-  }).format(now)
+  }).format(currentTime)
+
   return (
     <section className='flex size-full flex-col gap-10 text-white'>
       <div className='h-[300px] w-full rounded-[20px] bg-hero bg-cover'>
