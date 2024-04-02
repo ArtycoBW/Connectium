@@ -14,6 +14,7 @@ import ReactDatePicker from 'react-datepicker'
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import { ru } from 'date-fns/locale/ru'
 import Loader from './Loader'
+import { Input } from './ui/input'
 
 registerLocale('ru', ru)
 
@@ -87,7 +88,7 @@ const MettingTypeList = () => {
       <HomeCard
         img='/icons/join-meeting.svg'
         title='Присоединиться к встрече'
-        description='по ссылке-приглашению'
+        description='по пригласительной ссылке'
         className='bg-blue-1'
         handleClick={() => setMeetingState('isJoiningMeeting')}
       />
@@ -100,10 +101,10 @@ const MettingTypeList = () => {
       />
       <HomeCard
         img='/icons/recordings.svg'
-        title='Войти в конференцию'
-        description='по пригласительной ссылке'
+        title='Просмотр записей'
+        description='Записи встреч'
         className='bg-yellow-1'
-        handleClick={() => router.push('/recordings')}
+        handleClick={() => router.push('main/recordings')}
       />
 
       {!callDetail ? (
@@ -163,6 +164,21 @@ const MettingTypeList = () => {
         title='Начать встречу сейчас'
         handleClick={createMeeting}
       ></MeetingModal>
+
+      <MeetingModal
+        isOpen={meetingState === 'isJoiningMeeting'}
+        onClose={() => setMeetingState(undefined)}
+        title='Type the link here'
+        className='text-center'
+        buttonText='Присоединиться к встречи'
+        handleClick={() => router.push(values.link)}
+      >
+        <Input
+          placeholder='Ссылка на встречу'
+          onChange={e => setValues({ ...values, link: e.target.value })}
+          className='border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0'
+        />
+      </MeetingModal>
     </section>
   )
 }
