@@ -8,6 +8,14 @@ import MeetingModal from './MeetingModal'
 import { useUser } from '@clerk/nextjs'
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk'
 import { useToast } from '@/components/ui/use-toast'
+import { Textarea } from './ui/textarea'
+
+import ReactDatePicker from 'react-datepicker'
+import { registerLocale, setDefaultLocale } from 'react-datepicker'
+import { ru } from 'date-fns/locale/ru'
+import Loader from './Loader'
+
+registerLocale('ru', ru)
 
 const MettingTypeList = () => {
   const router = useRouter()
@@ -22,7 +30,7 @@ const MettingTypeList = () => {
     description: '',
     link: ''
   })
-  const [callDetails, setCallDetails] = useState<Call>()
+  const [callDetail, setCallDetail] = useState<Call>()
   const { toast } = useToast()
 
   const createMeeting = async () => {
@@ -51,7 +59,7 @@ const MettingTypeList = () => {
         }
       })
 
-      setCallDetails(call)
+      setCallDetail(call)
 
       if (!values.description) {
         router.push(`/meeting/${call.id}`)
@@ -63,6 +71,10 @@ const MettingTypeList = () => {
       toast({ title: 'Не удалось создать встречу' })
     }
   }
+
+  if (!client || !user) return <Loader />
+
+  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`
 
   return (
     <section className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4'>
@@ -93,6 +105,57 @@ const MettingTypeList = () => {
         className='bg-yellow-1'
         handleClick={() => router.push('/recordings')}
       />
+
+      {!callDetail ? (
+        <MeetingModal
+          isOpen={meetingState === 'isScheduleMeeting'}
+          onClose={() => setMeetingState(undefined)}
+          title='Create Meeting'
+          handleClick={createMeeting}
+        >
+          <div className='flex flex-col gap-2.5'>
+            <label className='text-base font-normal leading-[22.4px] text-sky-2'>
+              Добавьте описание
+            </label>
+            <Textarea
+              className='border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0'
+              onChange={e =>
+                setValues({ ...values, description: e.target.value })
+              }
+            />
+          </div>
+          <div className='flex w-full flex-col gap-2.5'>
+            <label className='text-base font-normal leading-[22.4px] text-sky-2'>
+              Выберите дату и время
+            </label>
+            <ReactDatePicker
+              selected={values.dateTime}
+              onChange={date => setValues({ ...values, dateTime: date! })}
+              showTimeSelect
+              locale={'ru'}
+              timeFormat='HH:mm'
+              timeIntervals={15}
+              timeCaption='time'
+              dateFormat='MMMM d, yyyy h:mm'
+              className='w-full rounded bg-dark-3 p-2 focus:outline-none'
+            />
+          </div>
+        </MeetingModal>
+      ) : (
+        <MeetingModal
+          isOpen={meetingState === 'isScheduleMeeting'}
+          onClose={() => setMeetingState(undefined)}
+          title='Встреча создана'
+          handleClick={() => {
+            navigator.clipboard.writeText(meetingLink)
+            toast({ title: 'Ссылка скопирована' })
+          }}
+          image={'/icons/checked.svg'}
+          buttonIcon='/icons/copy.svg'
+          className='text-center'
+          buttonText='Скопировать ссылку на встречу'
+        />
+      )}
 
       <MeetingModal
         isOpen={meetingState === 'isInstantMeeting'}

@@ -9,6 +9,25 @@
 }
 
 /* ======== stream css overrides ======== */
+.str-video__participant-listing-item
+  .str-video__participant-listing-item__media-indicator-group
+  .str-video__participant-listing-item__icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.str-video__call-controls__button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.str-video__participant-list__content {
+  overflow-x: hidden !important;
+}
+
 .str-video__call-stats {
   max-width: 500px;
   position: relative;
