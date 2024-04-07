@@ -14,18 +14,21 @@ import {
   initializeFabric,
   renderCanvas
 } from '@/lib/canvas'
-import { handleDelete } from '@/lib/key-events'
-import { useMutation, useStorage } from '@/liveblocks.config'
+import { handleDelete, handleKeyDown } from '@/lib/key-events'
+import { useMutation, useRedo, useStorage, useUndo } from '@/liveblocks.config'
 import { ActiveElement } from '@/types/type'
 import { fabric } from 'fabric'
 import { useEffect, useRef, useState } from 'react'
 
 const UiBuilder = () => {
+  const undo = useUndo()
+  const redo = useRedo()
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fabricRef = useRef<fabric.Canvas | null>(null)
   const isDrawing = useRef(false)
   const shapeRef = useRef<fabric.Object | null>(null)
-  const selectedShapeRef = useRef<string | null>('rectangle')
+  const selectedShapeRef = useRef<string | null>(null)
   const activeObjectRef = useRef<fabric.Object | null>(null)
 
   const canvasObjects = useStorage(root => root.canvasObjects)
@@ -120,7 +123,7 @@ const UiBuilder = () => {
   useEffect(() => {
     const canvas = initializeFabric({ canvasRef, fabricRef })
 
-    canvas.on('mouse:down', options => {
+    canvas.on('mouse:down', (options: any) => {
       handleCanvasMouseDown({
         options,
         canvas,
@@ -130,7 +133,7 @@ const UiBuilder = () => {
       })
     })
 
-    canvas.on('mouse:move', options => {
+    canvas.on('mouse:move', (options: any) => {
       handleCanvasMouseMove({
         options,
         canvas,
@@ -141,7 +144,7 @@ const UiBuilder = () => {
       })
     })
 
-    canvas.on('mouse:up', options => {
+    canvas.on('mouse:up', (options: any) => {
       handleCanvasMouseUp({
         canvas,
         isDrawing,
@@ -153,7 +156,7 @@ const UiBuilder = () => {
       })
     })
 
-    canvas.on('object:modified', options => {
+    canvas.on('object:modified', (options: any) => {
       handleCanvasObjectModified({
         options,
         syncShapeInStorage
@@ -162,6 +165,17 @@ const UiBuilder = () => {
 
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', () => handleResize({ canvas }))
+
+      window.addEventListener('keydown', e =>
+        handleKeyDown({
+          e,
+          canvas: fabricRef.current,
+          undo,
+          redo,
+          syncShapeInStorage,
+          deleteShapeFromStorage
+        })
+      )
     }
 
     return () => {
