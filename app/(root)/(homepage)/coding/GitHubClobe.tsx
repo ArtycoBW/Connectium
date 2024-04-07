@@ -397,7 +397,7 @@ const GitHubGlobe = () => {
   ]
 
   return (
-    <div className='flex flex-row items-center justify-center h-full dark:bg-transparent bg-white relative w-ful'>
+    <div className='flex-center flex-row h-full dark:bg-transparent bg-white relative w-ful'>
       <div className='mx-auto w-[800px] relative h-[800px] px-4'>
         <motion.div
           initial={{

@@ -75,7 +75,7 @@ const UIBuilder = () => {
             ease: 'linear',
             delay: 0.5
           }}
-          className='flex flex-col items-center justify-center pt-32 h-full max-h-screen'
+          className='flex-center flex-col pt-32 h-full max-h-screen'
         >
           <h1 className='md:text-6xl text-3xl lg:text-7xl font-bold text-center text-white relative whitespace-pre-line z-20'>
             Создавайте что угодно {`\n`} вместе с{' '}

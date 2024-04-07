@@ -2,18 +2,18 @@ import Image from 'next/image'
 import React from 'react'
 
 const Avatar = ({
-  avatar,
+  src,
   height,
   width
 }: {
-  avatar: string
+  src: string
   height: number
   width: number
 }) => {
   return (
     <div>
       <Image
-        src={avatar}
+        src={src}
         height={height}
         width={width}
         alt='avatar'

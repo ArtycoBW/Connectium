@@ -3,11 +3,12 @@ const colors = require('tailwindcss/colors')
 const {
   default: flattenColorPalette
 } = require('tailwindcss/lib/util/flattenColorPalette')
+import type { Config } from 'tailwindcss'
 
 const svgToDataUri = require('mini-svg-data-uri')
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   darkMode: ['class'],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -56,7 +57,14 @@ module.exports = {
         },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))'
+          foreground: 'hsl(var(--primary-foreground))',
+          black: '#14181F',
+          green: '#56FFA6',
+          grey: {
+            100: '#2B303B',
+            200: '#202731',
+            300: '#C4D3ED'
+          }
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
@@ -109,11 +117,11 @@ module.exports = {
         },
         spotlight: {
           '0%': {
-            opacity: 0,
+            opacity: '0',
             transform: 'translate(-72%, -62%) scale(0.5)'
           },
           '100%': {
-            opacity: 1,
+            opacity: '1',
             transform: 'translate(-50%,-40%) scale(1)'
           }
         },
@@ -159,7 +167,7 @@ module.exports = {
       )
     }
   ]
-}
+} satisfies Config
 
 function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme('colors'))
@@ -171,3 +179,5 @@ function addVariablesForColors({ addBase, theme }: any) {
     ':root': newVars
   })
 }
+
+export default config

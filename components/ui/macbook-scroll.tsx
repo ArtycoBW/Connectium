@@ -45,8 +45,10 @@ export const MacbookScroll = ({
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (window && window.innerWidth < 768) {
-      setIsMobile(true)
+    if (typeof window !== 'undefined') {
+      if (window && window.innerWidth < 768) {
+        setIsMobile(true)
+      }
     }
   }, [])
 
@@ -157,7 +159,7 @@ export const Lid = ({
           style={{
             boxShadow: '0px 2px 0px 2px var(--neutral-900) inset'
           }}
-          className='absolute inset-0 bg-[#010101] rounded-lg flex items-center justify-center'
+          className='absolute inset-0 bg-[#010101] rounded-lg flex-center'
         >
           <span className='text-white'>
             <AceternityLogo />
@@ -592,7 +594,7 @@ export const KBtn = ({
     >
       <div
         className={cn(
-          'h-6 w-6 bg-[#0A090D] rounded-[3.5px] flex items-center justify-center',
+          'h-6 w-6 bg-[#0A090D] rounded-[3.5px] flex-center',
           className
         )}
         style={{

@@ -94,9 +94,9 @@ export const InfiniteMoving = ({
                 <div className='relative block pr-2 text-[#3b82f6]'>
                   {item.icon}
                 </div>
-                <span className=' relative z-20 leading-[1.6] text-white/70 text-6xl font-bold hover:text-[#3b82f6] transition-all'>
+                <p className=' relative z-20 leading-[1.6] text-white/70 text-6xl font-bold hover:text-[#3b82f6] transition-all'>
                   {item.title}
-                </span>
+                </p>
               </div>
             </blockquote>
           </li>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   }
 }
 
-const RootLayout = ({ children }: { children: ReactNode }) => {
+const RootsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <main>
       <StreamVideoProvider>{children}</StreamVideoProvider>
@@ -18,4 +18,4 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
   )
 }
 
-export default RootLayout
+export default RootsLayout

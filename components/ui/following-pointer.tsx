@@ -1,6 +1,12 @@
-// Core component that receives mouse positions and renders pointer and content
+'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, {
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 
 import { motion, AnimatePresence, useMotionValue } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -10,13 +16,13 @@ export const FollowerPointerCard = ({
   className,
   title
 }: {
-  children: React.ReactNode
+  children: ReactNode
   className?: string
-  title?: string | React.ReactNode
+  title?: string | ReactNode
 }) => {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const ref = React.useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [isInside, setIsInside] = useState<boolean>(false) // Add this line
 
@@ -26,8 +32,8 @@ export const FollowerPointerCard = ({
     }
   }, [])
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (rect) {
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (rect && typeof window !== 'undefined') {
       const scrollX = window.scrollX
       const scrollY = window.scrollY
       x.set(e.clientX - rect.left + scrollX)

@@ -1,17 +1,16 @@
-import Avatar from '@/components/ui/avatar'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { File, Share2 } from 'lucide-react'
-import Link from 'next/link'
-import React, { useRef } from 'react'
-import { motion } from 'framer-motion'
-import Image from 'next/image'
-import { FollowerPointerCard } from '@/components/ui/following-pointer'
+'use client'
+
 import { TitleComponent } from '@/components/TitleComponent'
+import Avatar from '@/components/ui/avatar'
+import { FollowerPointerCard } from '@/components/ui/following-pointer'
+import { motion } from 'framer-motion'
+import { File, Share2 } from 'lucide-react'
+import { useRef } from 'react'
 
 const Dashboard = () => {
   const constraintsRef = useRef(null)
   return (
-    <div className=' flex flex-col justify-center items-center rounded-t-3xl -mt-3 h-[450px] overflow-hidden bg-gray-200 hover:bg-gray-300 pt-6'>
+    <div className=' flex flex-col justify-center items-center rounded-t-3xl mt-5 h-[450px] overflow-hidden bg-gray-200 hover:bg-gray-300 pt-6'>
       <div className='flex justify-between items-center gap-96 px-10 pt-4'>
         <div className='flex justify-center items-center gap-2 hover:scale-125 transition-all cursor-pointer'>
           <File width={25} height={25} color='black' />
@@ -20,12 +19,12 @@ const Dashboard = () => {
 
         <div className='flex gap-6'>
           <div className='flex justify-center items-center gap-2'>
-            <Avatar avatar='/assets/avatar2.jpg' height={30} width={30} />
-            <Avatar avatar='/assets/avatar3.jpg' height={30} width={30} />
+            <Avatar src='/assets/avatar2.jpg' height={30} width={30} />
+            <Avatar src='/assets/avatar3.jpg' height={30} width={30} />
           </div>
 
           <div className='flex justify-center items-center'>
-            <Avatar avatar='/assets/avatar.jpg' height={35} width={35} />
+            <Avatar src='/assets/avatar.jpg' height={35} width={35} />
             <div className='bg-white rounded-xl px-3 py-1 ml-4 flex justify-center items-center gap-1 hover:scale-125 hover:bg-primary transition-all cursor-pointer'>
               <Share2 width={10} height={10} color='black' />
               <p className='text-black text-md font-normal'>Share</p>
@@ -35,7 +34,7 @@ const Dashboard = () => {
       </div>
 
       <FollowerPointerCard
-        title={<TitleComponent title='artyco' avatar='/assets/avatar.jpg' />}
+        title={<TitleComponent title='artyco' src='/assets/avatar.jpg' />}
       >
         <motion.div
           className='flex flex-col place-content-start items-start gap-2 w-4/5 mx-auto mt-10 bg-white h-full rounded-2xl pt-16 px-8 cursor-none'

@@ -2,19 +2,19 @@
 
 import Image from 'next/image'
 import React, { useState } from 'react'
-import HomeCard from './HomeCard'
+import HomeCard from '../HomeCard'
 import { useRouter } from 'next/navigation'
 import MeetingModal from './MeetingModal'
 import { useUser } from '@clerk/nextjs'
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk'
 import { useToast } from '@/components/ui/use-toast'
-import { Textarea } from './ui/textarea'
+import { Textarea } from '../ui/textarea'
 
 import ReactDatePicker from 'react-datepicker'
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import { ru } from 'date-fns/locale/ru'
-import Loader from './Loader'
-import { Input } from './ui/input'
+import Loader from '../Loader'
+import { Input } from '../ui/input'
 
 registerLocale('ru', ru)
 

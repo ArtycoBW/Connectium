@@ -1,6 +1,6 @@
 'use client'
 
-import MettingTypeList from '@/components/MeetingTypeList'
+import MettingTypeList from '@/components/Meeting/MeetingTypeList'
 import React, { useEffect, useState } from 'react'
 
 const Home = () => {

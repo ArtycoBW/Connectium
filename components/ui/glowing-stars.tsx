@@ -99,7 +99,7 @@ export const Illustration = ({ mouseEnter }: { mouseEnter: boolean }) => {
         return (
           <div
             key={`matrix-col-${starIdx}}`}
-            className='relative flex items-center justify-center z-0'
+            className='relative flex-center z-0'
           >
             <Star isGlowing={isGlowing} delay={delay} />
             <AnimatePresence mode='wait'>
