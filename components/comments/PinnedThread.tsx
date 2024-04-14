@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { useMemo, useState } from "react";
-import { ThreadData } from "@liveblocks/client";
-import { Thread } from "@liveblocks/react-comments";
+import Image from 'next/image'
+import { useMemo, useState } from 'react'
+import { ThreadData } from '@liveblocks/client'
+import { Thread } from '@liveblocks/react-comments'
 
-import { ThreadMetadata } from "@/liveblocks.config";
+import { ThreadMetadata } from '@/liveblocks.config'
 
 type Props = {
-  thread: ThreadData<ThreadMetadata>;
-  onFocus: (threadId: string) => void;
-};
+  thread: ThreadData<ThreadMetadata>
+  onFocus: (threadId: string) => void
+}
 
 export const PinnedThread = ({ thread, onFocus, ...props }: Props) => {
   // Open pinned threads that have just been created
   const startMinimized = useMemo(
     () => Number(new Date()) - Number(new Date(thread.createdAt)) > 100,
     [thread]
-  );
+  )
 
-  const [minimized, setMinimized] = useState(startMinimized);
+  const [minimized, setMinimized] = useState(startMinimized)
 
   /**
    * memoize the result of this function so that it doesn't change on every render but only when the thread changes
@@ -34,18 +34,18 @@ export const PinnedThread = ({ thread, onFocus, ...props }: Props) => {
         className='absolute flex cursor-pointer gap-4'
         {...props}
         onClick={(e: any) => {
-          onFocus(thread.id);
+          onFocus(thread.id)
 
           // check if click is on/in the composer
           if (
             e.target &&
-            e.target.classList.contains("lb-icon") &&
-            e.target.classList.contains("lb-button-icon")
+            e.target.classList.contains('lb-icon') &&
+            e.target.classList.contains('lb-button-icon')
           ) {
-            return;
+            return
           }
 
-          setMinimized(!minimized);
+          setMinimized(!minimized)
         }}
       >
         <div
@@ -53,7 +53,9 @@ export const PinnedThread = ({ thread, onFocus, ...props }: Props) => {
           data-draggable={true}
         >
           <Image
-            src={`https://liveblocks.io/avatars/avatar-${Math.floor(Math.random() * 30)}.png`}
+            src={`https://liveblocks.io/avatars/avatar-${Math.floor(
+              Math.random() * 30
+            )}.png`}
             alt='Dummy Name'
             width={28}
             height={28}
@@ -66,8 +68,8 @@ export const PinnedThread = ({ thread, onFocus, ...props }: Props) => {
             <Thread
               thread={thread}
               indentCommentContent={false}
-              onKeyUp={(e) => {
-                e.stopPropagation();
+              onKeyUp={e => {
+                e.stopPropagation()
               }}
             />
           </div>
@@ -75,7 +77,7 @@ export const PinnedThread = ({ thread, onFocus, ...props }: Props) => {
       </div>
     ),
     [thread.comments.length, minimized]
-  );
+  )
 
-  return <>{memoizedContent}</>;
-};
+  return <>{memoizedContent}</>
+}

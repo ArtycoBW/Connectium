@@ -1,7 +1,8 @@
 import { LiveMap, createClient } from '@liveblocks/client'
-import { createRoomContext, createLiveblocksContext } from '@liveblocks/react'
+import { createLiveblocksContext, createRoomContext } from '@liveblocks/react'
 
 const client = createClient({
+  throttle: 16,
   publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!,
   async resolveUsers({ userIds }) {
     // Used only for Comments and Notifications. Return a list of user information
@@ -49,7 +50,7 @@ const client = createClient({
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
-  // cursor: { x: number, y: number } | null,
+  // cursor: { x: number; y: number } | null
   // ...
 }
 
@@ -67,8 +68,8 @@ type Storage = {
 // provided by your own custom auth back end (if used). Useful for data that
 // will not change during a session, like a user's name or avatar.
 type UserMeta = {
-  // id?: string,  // Accessible through `user.id`
-  // info?: Json,  // Accessible through `user.info`
+  // id?: string // Accessible through `user.id`
+  // info?: Json // Accessible through `user.info`
 }
 
 // Optionally, the type of custom events broadcast and listened to in this
@@ -81,9 +82,11 @@ type RoomEvent = {
 // Optionally, when using Comments, ThreadMetadata represents metadata on
 // each thread. Can only contain booleans, strings, and numbers.
 export type ThreadMetadata = {
-  // resolved: boolean;
-  // quote: string;
-  // time: number;
+  resolved: boolean
+  zIndex: number
+  time?: number
+  x: number
+  y: number
 }
 
 // Room-level hooks, use inside `RoomProvider`
