@@ -84,7 +84,6 @@ export const createSpecificShape = (
 
     case 'text':
       return createText(pointer, 'Пишите...')
-
     default:
       return null
   }
