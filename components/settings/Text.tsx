@@ -96,24 +96,20 @@ const RenderSelect = ({
         : fontWeight
     }
   >
-    <SelectTrigger className='no-ring w-full rounded-sm border border-primary-grey-200'>
+    <SelectTrigger className='no-ring w-full rounded-sm border border-primary-grey-200 bg-transparent'>
       <SelectValue
         placeholder={
           config.property === 'fontFamily'
-            ? 'Choose a font'
+            ? 'Times New Roman'
             : config.property === 'fontSize'
             ? '30'
             : 'Semibold'
         }
       />
     </SelectTrigger>
-    <SelectContent className='border-primary-grey-200 bg-primary-black text-primary-grey-300'>
+    <SelectContent className='border-primary-grey-200 active:bg-white text-primary-grey-300'>
       {config.options.map(option => (
-        <SelectItem
-          key={option.value}
-          value={option.value}
-          className=' hover:bg-primary hover:text-primary-black'
-        >
+        <SelectItem key={option.value} value={option.value} className=''>
           {option.label}
         </SelectItem>
       ))}

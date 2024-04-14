@@ -24,9 +24,14 @@ const Navbar = ({
 
   return (
     <nav className='flex select-none items-center justify-between gap-4 bg-primary-black px-5 text-white'>
-      <Image src='/icons/logo.svg' alt='FigPro Logo' width={35} height={35} />
+      <Image
+        src='/icons/logo.svg'
+        alt='Connectium Logo'
+        width={35}
+        height={35}
+      />
 
-      <ul className='flex flex-row'>
+      <ul className='flex flex-row gap-3 py-1'>
         {navElements.map((item: ActiveElement | any) => (
           <li
             key={item.name}
@@ -34,8 +39,12 @@ const Navbar = ({
               if (Array.isArray(item.value)) return
               handleActiveElement(item)
             }}
-            className={`group px-2.5 py-5 flex justify-center items-center transition-all
-            ${isActive(item.value) ? 'bg-primary' : 'hover:bg-primary-grey-200'}
+            className={`group px-2.5 py-5 flex justify-center items-center transition-all rounded-lg
+            ${
+              isActive(item.value)
+                ? 'bg-primary/80'
+                : 'hover:bg-primary-grey-200'
+            }
             `}
           >
             {/* Если value - массив, это означает, что это элемент навигации с вложенными опциями, т.е. выпадающий список */}
@@ -58,7 +67,7 @@ const Navbar = ({
                     src={item.icon}
                     alt={item.name}
                     fill
-                    className={isActive(item.value) ? 'invert' : ''}
+                    className={isActive(item.value) ? 'contrast-200' : ''}
                   />
                 </Button>
               </NewThread>
@@ -71,7 +80,7 @@ const Navbar = ({
                   src={item.icon}
                   alt={item.name}
                   fill
-                  className={isActive(item.value) ? 'invert' : ''}
+                  className={isActive(item.value) ? 'contrast-200' : ''}
                 />
               </Button>
             )}

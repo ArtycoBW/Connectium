@@ -10,13 +10,17 @@ import {
   handleCanvasMouseMove,
   handleCanvasMouseUp,
   handleCanvasObjectModified,
+  handleCanvasObjectScaling,
+  handleCanvasSelectionCreated,
+  handleCanvasZoom,
   handleResize,
   initializeFabric,
   renderCanvas
 } from '@/lib/canvas'
 import { handleDelete, handleKeyDown } from '@/lib/key-events'
+import { handleImageUpload } from '@/lib/shapes'
 import { useMutation, useRedo, useStorage, useUndo } from '@/liveblocks.config'
-import { ActiveElement } from '@/types/type'
+import { ActiveElement, Attributes } from '@/types/type'
 import { fabric } from 'fabric'
 import { useEffect, useRef, useState } from 'react'
 
@@ -30,8 +34,20 @@ const UiBuilder = () => {
   const shapeRef = useRef<fabric.Object | null>(null)
   const selectedShapeRef = useRef<string | null>(null)
   const activeObjectRef = useRef<fabric.Object | null>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const isEditingRef = useRef(false)
 
   const canvasObjects = useStorage(root => root.canvasObjects)
+
+  const [elementAttributes, setElementAttributes] = useState<Attributes>({
+    width: '',
+    height: '',
+    fontSize: '',
+    fontFamily: '',
+    fontWeight: '',
+    fill: '#aabbcc',
+    stroke: '#aabbcc'
+  })
 
   const syncShapeInStorage = useMutation(({ storage }, object) => {
     if (!object) return
@@ -113,6 +129,22 @@ const UiBuilder = () => {
         setActiveElement(defaultNavElement)
         break
 
+      case 'image':
+        // вызвать событие щелчка на элементе ввода, которое открывает диалоговое окно файла
+        imageInputRef.current?.click()
+        /**
+         * Установите режим рисования на false
+         * Если пользователь рисует на холсте, мы хотим остановить
+         * режим рисования при нажатии на элемент изображения из выпадающего списка.
+         */
+        isDrawing.current = false
+
+        if (fabricRef.current) {
+          // отключить режим рисования на холсте
+          fabricRef.current.isDrawingMode = false
+        }
+        break
+
       default:
         // установить выбранную форму на выбранный элемент
         selectedShapeRef.current = elem?.value as string
@@ -163,6 +195,34 @@ const UiBuilder = () => {
       })
     })
 
+    canvas.on('selection:created', (options: any) => {
+      handleCanvasSelectionCreated({
+        options,
+        isEditingRef,
+        setElementAttributes
+      })
+    })
+
+    canvas.on('object:scaling', options => {
+      handleCanvasObjectScaling({
+        options,
+        setElementAttributes
+      })
+    })
+
+    canvas.on('mouse:wheel', options => {
+      handleCanvasZoom({
+        options,
+        canvas
+      })
+    })
+
+    window.addEventListener('resize', () => {
+      handleResize({
+        canvas: fabricRef.current
+      })
+    })
+
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', () => handleResize({ canvas }))
 
@@ -199,11 +259,29 @@ const UiBuilder = () => {
       <UIBuilderNavbar
         handleActiveElement={handleActiveElement}
         activeElement={activeElement}
+        imageInputRef={imageInputRef}
+        handleImageUpload={e => {
+          e.stopPropagation()
+
+          handleImageUpload({
+            file: e.target.files[0],
+            canvas: fabricRef as any,
+            shapeRef,
+            syncShapeInStorage
+          })
+        }}
       />
       <section className='flex h-full flex-row'>
         <LeftSidebar allShapes={Array.from(canvasObjects)} />
         <Live canvasRef={canvasRef} />
-        <RightSidebar />
+        <RightSidebar
+          elementAttributes={elementAttributes}
+          setElementAttributes={setElementAttributes}
+          fabricRef={fabricRef}
+          isEditingRef={isEditingRef}
+          activeObjectRef={activeObjectRef}
+          syncShapeInStorage={syncShapeInStorage}
+        />
       </section>
     </main>
   )
