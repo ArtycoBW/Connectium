@@ -45,7 +45,7 @@ const Dashboard = () => {
             drag
             dragConstraints={constraintsRef}
           >
-            Connecticum
+            Connectium
           </motion.h2>
           <motion.h2
             className='text-5xl text-gray-400 font-bold border border-transparent hover:border hover:border-primary p-2 pb-4'

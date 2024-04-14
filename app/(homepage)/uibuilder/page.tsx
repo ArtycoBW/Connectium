@@ -59,7 +59,7 @@ const items = [
   }
 ]
 
-const UIBuilder = () => {
+const UIBuilderLanding = () => {
   return (
     <div className='flex flex-col w-full h-full'>
       <MaxWidthWrapper>
@@ -188,4 +188,4 @@ const UIBuilder = () => {
   )
 }
 
-export default UIBuilder
+export default UIBuilderLanding

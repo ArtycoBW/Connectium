@@ -1,43 +1,57 @@
 'use client'
 
-import LeftSidebar from '@/components/LeftSidebar'
-import Live from '@/components/Live'
-import RightSidebar from '@/components/RightSidebar'
-import UIBuilderNavbar from '@/components/UIBuilderNavbar'
-import { defaultNavElement } from '@/constants'
+import { fabric } from 'fabric'
+import { useEffect, useRef, useState } from 'react'
+
+import { useMutation, useRedo, useStorage, useUndo } from '@/liveblocks.config'
 import {
-  handleCanvasMouseDown,
   handleCanvasMouseMove,
+  handleCanvasMouseDown,
   handleCanvasMouseUp,
   handleCanvasObjectModified,
+  handleCanvasObjectMoving,
   handleCanvasObjectScaling,
   handleCanvasSelectionCreated,
   handleCanvasZoom,
+  handlePathCreated,
   handleResize,
   initializeFabric,
   renderCanvas
 } from '@/lib/canvas'
 import { handleDelete, handleKeyDown } from '@/lib/key-events'
 import { handleImageUpload } from '@/lib/shapes'
-import { useMutation, useRedo, useStorage, useUndo } from '@/liveblocks.config'
+import { defaultNavElement } from '@/constants'
 import { ActiveElement, Attributes } from '@/types/type'
-import { fabric } from 'fabric'
-import { useEffect, useRef, useState } from 'react'
+import LeftSidebar from '@/components/LeftSidebar'
+import Live from '@/components/Live'
+import RightSidebar from '@/components/RightSidebar'
+import UIBuilderNavbar from '@/components/UIBuilderNavbar'
 
-const UiBuilder = () => {
+const UIBuilder = () => {
   const undo = useUndo()
   const redo = useRedo()
 
+  const canvasObjects = useStorage(root => root.canvasObjects)
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fabricRef = useRef<fabric.Canvas | null>(null)
+
   const isDrawing = useRef(false)
+
   const shapeRef = useRef<fabric.Object | null>(null)
+
   const selectedShapeRef = useRef<string | null>(null)
+
   const activeObjectRef = useRef<fabric.Object | null>(null)
-  const imageInputRef = useRef<HTMLInputElement>(null)
   const isEditingRef = useRef(false)
 
-  const canvasObjects = useStorage(root => root.canvasObjects)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+
+  const [activeElement, setActiveElement] = useState<ActiveElement>({
+    name: '',
+    value: '',
+    icon: ''
+  })
 
   const [elementAttributes, setElementAttributes] = useState<Attributes>({
     width: '',
@@ -49,153 +63,127 @@ const UiBuilder = () => {
     stroke: '#aabbcc'
   })
 
+  const deleteShapeFromStorage = useMutation(({ storage }, shapeId) => {
+    const canvasObjects = storage.get('canvasObjects')
+    canvasObjects.delete(shapeId)
+  }, [])
+
+  const deleteAllShapes = useMutation(({ storage }) => {
+    const canvasObjects = storage.get('canvasObjects')
+
+    if (!canvasObjects || canvasObjects.size === 0) return true
+
+    for (const [key, value] of canvasObjects.entries()) {
+      canvasObjects.delete(key)
+    }
+
+    return canvasObjects.size === 0
+  }, [])
+
   const syncShapeInStorage = useMutation(({ storage }, object) => {
     if (!object) return
-
     const { objectId } = object
 
     const shapeData = object.toJSON()
     shapeData.objectId = objectId
 
     const canvasObjects = storage.get('canvasObjects')
-
     canvasObjects.set(objectId, shapeData)
-  }, [])
-
-  const [activeElement, setActiveElement] = useState<ActiveElement>({
-    name: '',
-    value: '',
-    icon: ''
-  })
-
-  /**
-   * deleteShapeFromStorage - это мутация, которая удаляет фигуру из
-   * хранилища ключевых значений liveblocks.
-   * useMutation - это хук, предоставляемый Liveblocks, который позволяет вам выполнять
-   * мутации над данными liveblocks.
-   *
-   * Мы используем эту мутацию для удаления фигуры из хранилища ключевых значений, когда
-   * пользователь удаляет фигуру с холста.
-   **/
-  const deleteShapeFromStorage = useMutation(({ storage }, shapeId) => {
-    /**
-     * canvasObjects - это карта, содержащая все фигуры в ключевом значении.
-     * Как магазин. Мы можем создавать несколько хранилищ в живых блоках.
-     */
-    const canvasObjects = storage.get('canvasObjects')
-    canvasObjects.delete(shapeId)
-  }, [])
-
-  /**
-   * deleteAllShapes - это мутация, которая удаляет все фигуры из
-   * хранилища ключевых значений живых блоков.
-   *
-   * Мы используем эту мутацию для удаления всех форм из хранилища ключевых значений, когда пользователь нажимает на кнопку сброса.
-   */
-  const deleteAllShapes = useMutation(({ storage }) => {
-    // получить хранилище объектов canvasObjects
-    const canvasObjects = storage.get('canvasObjects')
-
-    // Если store не существует или пуст, верните
-    if (!canvasObjects || canvasObjects.size === 0) return true
-
-    // удалить все фигуры из store
-    for (const [key, value] of canvasObjects.entries()) {
-      canvasObjects.delete(key)
-    }
-
-    // Возвращает true, если store пуст
-    return canvasObjects.size === 0
   }, [])
 
   const handleActiveElement = (elem: ActiveElement) => {
     setActiveElement(elem)
 
     switch (elem?.value) {
-      // удалить все фигуры с холста
       case 'reset':
-        // очистить storage
         deleteAllShapes()
-        // очистить canvas
         fabricRef.current?.clear()
-        // установите "select" в качестве активного элемента
         setActiveElement(defaultNavElement)
         break
 
       case 'delete':
-        // удалить с холста
         handleDelete(fabricRef.current as any, deleteShapeFromStorage)
-        // установите "select" в качестве активного элемента
         setActiveElement(defaultNavElement)
         break
 
       case 'image':
-        // вызвать событие щелчка на элементе ввода, которое открывает диалоговое окно файла
         imageInputRef.current?.click()
-        /**
-         * Установите режим рисования на false
-         * Если пользователь рисует на холсте, мы хотим остановить
-         * режим рисования при нажатии на элемент изображения из выпадающего списка.
-         */
         isDrawing.current = false
 
         if (fabricRef.current) {
-          // отключить режим рисования на холсте
           fabricRef.current.isDrawingMode = false
         }
         break
 
+      case 'comments':
+        break
+
       default:
-        // установить выбранную форму на выбранный элемент
         selectedShapeRef.current = elem?.value as string
         break
     }
   }
 
   useEffect(() => {
-    const canvas = initializeFabric({ canvasRef, fabricRef })
+    const canvas = initializeFabric({
+      canvasRef,
+      fabricRef
+    })
 
-    canvas.on('mouse:down', (options: any) => {
+    canvas.on('mouse:down', options => {
       handleCanvasMouseDown({
         options,
         canvas,
+        selectedShapeRef,
         isDrawing,
-        shapeRef,
-        selectedShapeRef
+        shapeRef
       })
     })
 
-    canvas.on('mouse:move', (options: any) => {
+    canvas.on('mouse:move', options => {
       handleCanvasMouseMove({
         options,
         canvas,
         isDrawing,
-        shapeRef,
         selectedShapeRef,
+        shapeRef,
         syncShapeInStorage
       })
     })
 
-    canvas.on('mouse:up', (options: any) => {
+    canvas.on('mouse:up', () => {
       handleCanvasMouseUp({
         canvas,
         isDrawing,
         shapeRef,
+        activeObjectRef,
         selectedShapeRef,
         syncShapeInStorage,
-        setActiveElement,
-        activeObjectRef
+        setActiveElement
       })
     })
 
-    canvas.on('object:modified', (options: any) => {
+    canvas.on('path:created', options => {
+      handlePathCreated({
+        options,
+        syncShapeInStorage
+      })
+    })
+
+    canvas.on('object:modified', options => {
       handleCanvasObjectModified({
         options,
         syncShapeInStorage
       })
     })
 
-    canvas.on('selection:created', (options: any) => {
+    canvas?.on('object:moving', options => {
+      handleCanvasObjectMoving({
+        options
+      })
+    })
+
+    canvas.on('selection:created', options => {
       handleCanvasSelectionCreated({
         options,
         isEditingRef,
@@ -223,10 +211,27 @@ const UiBuilder = () => {
       })
     })
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', () => handleResize({ canvas }))
+    window.addEventListener('keydown', e =>
+      handleKeyDown({
+        e,
+        canvas: fabricRef.current,
+        undo,
+        redo,
+        syncShapeInStorage,
+        deleteShapeFromStorage
+      })
+    )
 
-      window.addEventListener('keydown', e =>
+    return () => {
+      canvas.dispose()
+
+      window.removeEventListener('resize', () => {
+        handleResize({
+          canvas: null
+        })
+      })
+
+      window.removeEventListener('keydown', e =>
         handleKeyDown({
           e,
           canvas: fabricRef.current,
@@ -237,14 +242,7 @@ const UiBuilder = () => {
         })
       )
     }
-
-    return () => {
-      /**
-       * dispose - это метод, предоставляемый Fabric, который позволяет утилизировать холст. Он очищает холст и удаляет все события слушатели
-       */
-      canvas.dispose()
-    }
-  }, [])
+  }, [canvasRef])
 
   useEffect(() => {
     renderCanvas({
@@ -257,10 +255,9 @@ const UiBuilder = () => {
   return (
     <main className='h-screen overflow-hidden'>
       <UIBuilderNavbar
-        handleActiveElement={handleActiveElement}
-        activeElement={activeElement}
         imageInputRef={imageInputRef}
-        handleImageUpload={e => {
+        activeElement={activeElement}
+        handleImageUpload={(e: any) => {
           e.stopPropagation()
 
           handleImageUpload({
@@ -270,10 +267,14 @@ const UiBuilder = () => {
             syncShapeInStorage
           })
         }}
+        handleActiveElement={handleActiveElement}
       />
+
       <section className='flex h-full flex-row'>
         <LeftSidebar allShapes={Array.from(canvasObjects)} />
-        <Live canvasRef={canvasRef} />
+
+        <Live canvasRef={canvasRef} undo={undo} redo={redo} />
+
         <RightSidebar
           elementAttributes={elementAttributes}
           setElementAttributes={setElementAttributes}
@@ -287,4 +288,4 @@ const UiBuilder = () => {
   )
 }
 
-export default UiBuilder
+export default UIBuilder

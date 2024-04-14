@@ -1,7 +1,10 @@
+'use client'
+
 import { MacbookScroll } from '@/components/ui/macbook-scroll'
 import { TextGenerateEffect } from '@/components/ui/text-generate-effect'
 import { TypewriterEffectSmooth } from '@/components/ui/typewriter-effect'
 import { description, titleWorlds } from './constants'
+import { Badge } from '@/components/ui/badge'
 
 export default function HomePage() {
   return (
@@ -9,8 +12,11 @@ export default function HomePage() {
       <MacbookScroll
         title={
           <div className='text-center'>
-            {/* <Badge variant='outline' className='bg-slate-900'>
-              Connecticum v0.1 beta
+            {/* <Badge
+              variant='outline'
+              className='bg-primary/5 hover:bg-primary/10'
+            >
+              Connectium v0.1 beta
             </Badge> */}
             <TypewriterEffectSmooth words={titleWorlds} />
             <TextGenerateEffect

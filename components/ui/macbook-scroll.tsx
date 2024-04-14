@@ -340,23 +340,23 @@ export const Keypad = () => {
           tab
         </KBtn>
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
-          <span className='block'>Q</span>
+          <span className='block'>Д</span>
         </KBtn>
 
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
-          <span className='block'>W</span>
+          <span className='block'>И</span>
         </KBtn>
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
-          <span className='block'>E</span>
+          <span className='block'>П</span>
         </KBtn>
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
-          <span className='block'>R</span>
+          <span className='block'>Л</span>
         </KBtn>
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
-          <span className='block'>T</span>
+          <span className='block'>О</span>
         </KBtn>
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
-          <span className='block'>Y</span>
+          <span className='block'>М</span>
         </KBtn>
         <KBtn className='hover:bg-white/20 transition-all cursor-pointer'>
           <span className='block'>U</span>

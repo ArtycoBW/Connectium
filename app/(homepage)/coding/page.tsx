@@ -3,7 +3,7 @@ import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import { motion } from 'framer-motion'
 import GitHubGlobe from './GitHubClobe'
 
-const Coding = () => {
+const CodingLanding = () => {
   return (
     <div>
       <MaxWidthWrapper className='h-screen'>
@@ -45,4 +45,4 @@ const Coding = () => {
   )
 }
 
-export default Coding
+export default CodingLanding

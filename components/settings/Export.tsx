@@ -10,7 +10,7 @@ const Export = () => (
       className='w-full bg-primary/5 border border-primary-grey-100 hover:bg-primary/50 hover:text-white'
       onClick={exportToPdf}
     >
-      Export to PDF
+      Экспорт в PDF
     </Button>
   </div>
 )

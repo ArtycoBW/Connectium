@@ -413,7 +413,7 @@ const GitHubGlobe = () => {
         >
           <h2 className='text-center text-7xl md:text-6xl font-bold text-black dark:text-white whitespace-pre-line'>
             Пишите код вместе {`\n`} с{' '}
-            <span className='text-[#3b82f6]'>Connecticum</span>
+            <span className='text-[#3b82f6]'>Connectium</span>
           </h2>
         </motion.div>
         <div className='absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-transparent to-black z-120' />

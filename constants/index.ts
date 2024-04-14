@@ -40,32 +40,32 @@ export const COLORS = ['#DC2626', '#D97706', '#059669', '#7C3AED', '#DB2777']
 export const shapeElements = [
   {
     icon: '/assets/rectangle.svg',
-    name: 'Rectangle',
+    name: 'Прямоугольник',
     value: 'rectangle'
   },
   {
     icon: '/assets/circle.svg',
-    name: 'Circle',
+    name: 'Круг',
     value: 'circle'
   },
   {
     icon: '/assets/triangle.svg',
-    name: 'Triangle',
+    name: 'Треугольник',
     value: 'triangle'
   },
   {
     icon: '/assets/line.svg',
-    name: 'Line',
+    name: 'Линия',
     value: 'line'
   },
   {
     icon: '/assets/image.svg',
-    name: 'Image',
+    name: 'Картинка',
     value: 'image'
   },
   {
     icon: '/assets/freeform.svg',
-    name: 'Free Drawing',
+    name: 'Рисование',
     value: 'freeform'
   }
 ]

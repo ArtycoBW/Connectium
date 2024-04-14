@@ -10,7 +10,7 @@ const NavBar = () => {
   const { user } = useUser()
 
   return (
-    <div className='sticky z-50 top-0 inset-x-0 h-14 border-b border-primary/5'>
+    <div className='sticky z-50 top-0 inset-x-0 h-13 border-b border-primary/5'>
       <header className='relative py-2 bg-opacity-70 bg-transparent/10'>
         <MaxWidthWrapper>
           <div className='flex justify-between items-center'>
@@ -18,7 +18,7 @@ const NavBar = () => {
               <Link href='/' className='flex justify-center items-center'>
                 <Image src='icons/logo.svg' width={35} height={35} alt='logo' />
                 <h1 className='text-xl font-bold hover:text-primary transition-all'>
-                  Connecticum
+                  Connectium
                 </h1>
               </Link>
             </div>
