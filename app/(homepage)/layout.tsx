@@ -1,4 +1,5 @@
 import NavBar from '@/components/LandingNavbar'
+import Preloader from '@/components/Preload'
 import { SparklesCore } from '@/components/ui/sparkles'
 import { ReactNode } from 'react'
 
@@ -18,7 +19,6 @@ export default function HomePageLayout({
         className='w-full h-full absolute z-10'
         particleColor='#346ccb'
       />
-
       <NavBar />
       <div className='z-50'>{children}</div>
     </main>
